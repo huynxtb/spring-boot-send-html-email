@@ -28,6 +28,17 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/send-discount")
+    public String pageDiscount() {
+        return "send_discount";
+    }
+
+    @GetMapping("/discount_template")
+    public String discountTempalte(){
+        return "common/email_send_multiple";
+    }
+
+    // Just send to 1 customer
     @PostMapping("/send-mail")
     public String sendMail(@RequestParam("email") String email,
                            @RequestParam("name") String name,
@@ -56,11 +67,26 @@ public class HomeController {
                              new CustomerDTO(name, phone, address, email,
                              new ProductDTO(pName, pCode, price, quantity)));
 
-            emailService.sendMail(dto); // Send
+            emailService.sendMail(dto); // Just send to 1 customer
 
         }catch (ArrayIndexOutOfBoundsException | MessagingException | ParseException e){
             log.error("In controller -> HomeController -> /send-mail");
         }
         return "redirect:/";
+    }
+
+    // Send discount to all email customer
+    @PostMapping("/discount-email")
+    public String sendDiscounts(@RequestParam(value = "emails") String emails){
+        try {
+
+            String [] arrStr = emails.split(" ");
+
+            emailService.sendAll(arrStr); // Send to all email
+
+        }catch (ArrayIndexOutOfBoundsException | MessagingException e){
+            log.error("In controller -> HomeController -> /send-mail");
+        }
+        return "redirect:/send-discount";
     }
 }
