@@ -33,13 +33,12 @@ public class EmailService {
         String template = templateEngine.process("common/email_send_one", context); // Get path template email
         if (template!=null){
             try {
-                String [] emails = new String[] {"dev.api.oauth@gmail.com", "kevinguyentb@gmail.com", "huynx.dev.dn@gmail.com"};
+
                 MimeMessage mimeMessage = javaMailSender.createMimeMessage(); // Create mail content
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage); // Enable -> True if u want to send with file
                 helper.setSubject("Electronic invoice of the order #"+dto.getCode()); // set Subject email
                 helper.setText(template, true); // Enable content email with html format
-//                helper.setTo(dto.getCustomerDTO().getEmail()); // Send to email customer
-                helper.setTo(emails);
+                helper.setTo(dto.getCustomerDTO().getEmail()); // Send to email customer
 
 //                FileSystemResource file = new FileSystemResource(new File("c:/Sample.jpg")); // Send file
 //                helper.addAttachment("CoolImage.jpg", file);
